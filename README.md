@@ -29,6 +29,8 @@ The proposed method **PhyloMed** in the paper is implemented in the R package **
 ``` r
 # Within R
 install.packages("miMediation_0.1.tar.gz", repos=NULL, type = "source")
+# Using RStudio and devtools
+install_github("tangzheng1/miMediation")
 # Using Terminal
 R CMD INSTALL ./miMediation_0.1.tar.gz
 ```
