@@ -22,6 +22,11 @@ Here are brief descriptions for each folder, detailed explanation are commented 
 
 * a folder named **SuppFigs**, which contains the figures in the supporting information.
 
+## R Package
+
+The proposed method **PhyloMed** in the paper is implemented in the R package **miMediation**, which is publicly available at https://tangzheng1.github.io/
+tanglab/software
+
 ## Contact
 
-* Qilin Hong - qhong8@wisc.edu
+* Qilin (Kirin) Hong - qhong8@wisc.edu
