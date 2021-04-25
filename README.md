@@ -24,8 +24,14 @@ Here are brief descriptions for each folder, detailed explanation are commented 
 
 ## R Package
 
-The proposed method **PhyloMed** in the paper is implemented in the R package **miMediation**, which is publicly available at https://tangzheng1.github.io/
-tanglab/software
+The proposed method **PhyloMed** in the paper is implemented in the R package **miMediation**, which is publicly available at https://tangzheng1.github.io/tanglab/software
+
+``` r
+# Within R
+install.packages("miMediation_0.1.tar.gz", repos=NULL, type = "source")
+# Using Terminal
+R CMD INSTALL ./miMediation_0.1.tar.gz
+```
 
 ## Contact
 
