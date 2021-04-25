@@ -14,7 +14,7 @@ Here are brief descriptions for each folder, detailed explanation are commented 
 * a folder named **Simulation**, which contains the simulation shell scripts and R scripts.
   - **continuous_JC**: DAGman workflow for continuous outcome
   - **binary_JC**: DAGman workflow for binary outcome
-  - By submitting the medtest.dag to High-Throughput Condor, you are expected to get a csv file in the \*_JC/RESULT folder.
+  - By submitting the ./medtest.dag to High-Throughput Condor, you are expected to get a csv file in the ./\*_JC/RESULT folder.
 
 * a folder named **Data**, which contains raw data and derived data.
 
