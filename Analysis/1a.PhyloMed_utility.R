@@ -15,6 +15,9 @@ phylomed <- function(treatment, mediators, outcome, tree, covariates = NULL, int
     conf = cbind(1, covariates)
   }
   
+  # compute residual forming matrix Rconf
+  Rconf = diag(nrow(conf)) - conf %*% solve(t(conf) %*% conf) %*% t(conf)
+  
   ## here perform tree-based method
   chi.stat.alpha = chi.stat.beta = z.stat.alpha = z.stat.beta = pval.alpha.asym = pval.beta.asym = pval.alpha.perm = pval.beta.perm = numeric(tree$Nnode)
   rawp.sobel = numeric(tree$Nnode)
@@ -131,7 +134,7 @@ phylomed <- function(treatment, mediators, outcome, tree, covariates = NULL, int
       Nexc = 0
       alpha.stat.perm = numeric(B.max)
       while (Nexc < R.sel & m < B.max) {
-        x2.1_perm = qr.resid(fit$qr,  sample(Trt))
+        x2.1_perm = qr.resid(fit$qr, Rconf[sample(nrow(Rconf)),] %*% Trt)
         stat_perm = (sum(x2.1_perm*r))^2/sum(x2.1_perm*x2.1_perm)/dispersion
         if(stat_perm >= stat) Nexc = Nexc + 1
         alpha.stat.perm[m] = stat_perm
@@ -178,12 +181,12 @@ phylomed <- function(treatment, mediators, outcome, tree, covariates = NULL, int
       beta.stat.perm = numeric(B.max)
       while (Nexc < R.sel & m < B.max) {
         if(interaction){
-          tmp_beta = .test_beta(outcome, G[sample(nrow(G)),], Trt, conf, obj = obj, test.type="vc") # est[1] ~ mediator est[2] ~ exposure * mediator
+          tmp_beta = .test_beta(outcome, Rconf[sample(nrow(Rconf)),] %*% G, Trt, conf, obj = obj, test.type="vc") # est[1] ~ mediator est[2] ~ exposure * mediator
         }else{
           if(length(unique(outcome)) > 2){
-            tmp_beta = .test_beta(outcome, sample(G), Trt, conf, resid.obs = mod.resid, s2.obs = mod.s2, test.type="mv")
+            tmp_beta = .test_beta(outcome, Rconf[sample(nrow(Rconf)),] %*% G, Trt, conf, resid.obs = mod.resid, s2.obs = mod.s2, test.type="mv")
           }else{
-            tmp_beta = .test_beta(outcome, sample(G), Trt, conf, est.obs = mod.est, test.type="mv")
+            tmp_beta = .test_beta(outcome, Rconf[sample(nrow(Rconf)),] %*% G, Trt, conf, est.obs = mod.est, test.type="mv")
           }
         }
         if(tmp_beta$stat >= TestBeta$stat) Nexc = Nexc + 1
