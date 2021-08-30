@@ -1,0 +1,6 @@
+1,50,1,1,allType1Nsample50A1B1.Rdata
+2,50,1,1,allType2Nsample50A1B1.Rdata
+5,50,1,1,allType5Nsample50A1B1.Rdata
+1,200,1,1,allType1Nsample200A1B1.Rdata
+2,200,1,1,allType2Nsample200A1B1.Rdata
+5,200,1,1,allType5Nsample200A1B1.Rdata
