@@ -1,0 +1,5 @@
+,CausalType,N,A,B,dist.bc.MedTest,dist.jac.MedTest,dist.uw.MedTest,dist.w.MedTest,dist.omn.MedTest,dist.bc.MODIMA,dist.jac.MODIMA,dist.uw.MODIMA,dist.w.MODIMA,simes.asym,fisher.asym,hmp.asym,simes.perm,fisher.perm,hmp.perm,ccmm.boot.tide,ccmm.norm.tide
+2,1,50,1,1,0.0055,0.0335,0.0195,0.002,0.018,0.004,0.015,0.019,0.001,0.2305,0.033,0.2275,0.244,0.025,0.239,NA,NA
+4,2,50,1,1,0.016,0.1015,0.042,0.0035,0.057,0.0135,0.0682,0.0411,0.004,0.3715,0.098,0.3745,0.387,0.081,0.388,NA,NA
+1,1,200,1,1,0.031,0.1845,0.09,0.0015,0.133,0.0115,0.07,0.0535,0.001,0.6155,0.2435,0.6155,0.6195,0.1975,0.6185,NA,NA
+3,2,200,1,1,0.143,0.4195,0.2215,0.0115,0.3555,0.0615,0.2155,0.1195,0.008,0.857,0.603,0.8595,0.856,0.564,0.859,NA,NA
