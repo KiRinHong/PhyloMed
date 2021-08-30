@@ -1,0 +1,14 @@
+1,50,0,0,allType1Nsample50A0B0.Rdata
+1,200,0,0,allType1Nsample200A0B0.Rdata
+1,50,1,0,allType1Nsample50A1B0.Rdata
+2,50,1,0,allType2Nsample50A1B0.Rdata
+1,200,1,0,allType1Nsample200A1B0.Rdata
+2,200,1,0,allType2Nsample200A1B0.Rdata
+1,50,0,1,allType1Nsample50A0B1.Rdata
+2,50,0,1,allType2Nsample50A0B1.Rdata
+1,200,0,1,allType1Nsample200A0B1.Rdata
+2,200,0,1,allType2Nsample200A0B1.Rdata
+1,50,1,1,allType1Nsample50A1B1.Rdata
+2,50,1,1,allType2Nsample50A1B1.Rdata
+1,200,1,1,allType1Nsample200A1B1.Rdata
+2,200,1,1,allType2Nsample200A1B1.Rdata
