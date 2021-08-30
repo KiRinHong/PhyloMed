@@ -18,7 +18,7 @@ Here are brief descriptions for each folder, detailed explanation are commented 
   - **DiffModels**: Evaluate empirical type I error of global mediation test when different subcomposition models were used.
   - **PropOfNull**: Evaluate bias and standard deviation of the estimated probabilities of three sub-nulls using two differernt estimation approaches.
   - **SmallEffectSize**: Evaluate empirical type I error of different global mediation tests under two scenarios of mediation effect size.
-  - By submitting the ./medtest.dag to High-Throughput Condor, you are expected to get a csv file in the corresponding *RESULT* folder.
+  - Download a copy of R (R361.tar.gz) and create a portable copy of necessary R packages (See [tutorial](https://chtc.cs.wisc.edu/r-jobs)). By submitting the ./medtest.dag to High-Throughput Condor, you are expected to get a csv file in the corresponding *RESULT* folder.
   - generateTxt.R: Generate the inpuut.txt and comb_sim.txt in *GETSIM* and *COMBSIM* folder, respectively. 
 
 * a folder named **Data**, which contains raw data and derived data.
