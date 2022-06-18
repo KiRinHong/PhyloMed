@@ -1,0 +1,6 @@
+1,200,0.001,0,allType1Nsample200A0.001B0.Rdata
+2,200,0.001,0,allType2Nsample200A0.001B0.Rdata
+1,200,0,0.5,allType1Nsample200A0B0.5.Rdata
+2,200,0,0.5,allType2Nsample200A0B0.5.Rdata
+1,200,0.001,0.5,allType1Nsample200A0.001B0.5.Rdata
+2,200,0.001,0.5,allType2Nsample200A0.001B0.5.Rdata
