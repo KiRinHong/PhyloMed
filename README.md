@@ -1,6 +1,6 @@
 ## File Description
 
-This repository is used for depositing the analysis scripts, derived data/results and corresponding figures for the paper "A Phylogeny-based Test of Mediation Effect in Microbiome". 
+This repository is used for depositing the analysis scripts, derived data/results and corresponding figures for the paper "Testing mediation effect of microbial communities on a phylogenetic tree". 
 
 Here are brief descriptions for each folder, detailed explanation are commented within code and described in the paper:
 
@@ -8,7 +8,7 @@ Here are brief descriptions for each folder, detailed explanation are commented 
   - 0.prepareData.R
   - 1.runModel.R
   - 2.generatePlot.R
-  - 3.generateTable.R
+  - 3.runPairLeafAnalysis.R
   - \*.utility.R
 
 * a folder named **Simulation**, which contains the simulation shell scripts and R scripts.
@@ -23,9 +23,7 @@ Here are brief descriptions for each folder, detailed explanation are commented 
 
 * a folder named **Data**, which contains raw data and derived data.
 
-* a folder named **Figs**, which contains the figures in the main text.
-
-* a folder named **SuppFigs**, which contains the figures in the supporting information.
+* a folder named **Figs**, which contains the figures in the main text and supplementary file.
 
 ## R Package
 
