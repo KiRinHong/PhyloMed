@@ -11,6 +11,10 @@ Here are brief descriptions for each folder, detailed explanation are commented 
   - 3.runPairLeafAnalysis.R
   - \*.utility.R
 
+* a folder named **Data**, which contains raw data and derived data.
+
+* a folder named **Figs**, which contains the figures in the main text and supplementary information.
+
 * a folder named **Simulation**, which contains the simulation shell scripts and R scripts.
   - **ProposedModel_Main**: The treatment-associated taxa set and the outcome-associated taxa set are completely overlapped. The taxa are clustered on the tree.
   - **PartialOverlap**: The treatment-associated taxa set and the outcome-associated taxa set are partially overlapped. The taxa are clustered on the tree.
@@ -20,10 +24,6 @@ Here are brief descriptions for each folder, detailed explanation are commented 
   - **SmallEffectSize**: Evaluate empirical type I error of different global mediation tests under two scenarios of mediation effect size.
   - Download a copy of R (R361.tar.gz) and create a portable copy of necessary R packages (See [tutorial](https://chtc.cs.wisc.edu/uw-research-computing/r-jobs.html)). By submitting the ./medtest.dag to High-Throughput Condor, you are expected to get a csv file in the corresponding *RESULT* folder.
   - generateTxt.R: Generate the inpuut.txt and comb_sim.txt in *GETSIM* and *COMBSIM* folder, respectively. 
-
-* a folder named **Data**, which contains raw data and derived data.
-
-* a folder named **Figs**, which contains the figures in the main text and supplementary file.
 
 ## R Package
 
