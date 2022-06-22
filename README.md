@@ -1,6 +1,6 @@
 ## File Description
 
-This repository is used for depositing the analysis scripts, derived data/results and corresponding figures for the paper "Testing mediation effect of microbial communities on a phylogenetic tree". 
+This repository is used for depositing the analysis scripts, derived data/results and corresponding figures for the paper "Testing mediation effects of microbial communities on a phylogenetic tree". 
 
 Here are brief descriptions for each folder, detailed explanation are commented within code and described in the paper:
 
