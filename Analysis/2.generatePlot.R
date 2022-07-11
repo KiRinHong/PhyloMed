@@ -36,22 +36,6 @@ pdf("../Figs/Cecal.subtree.pdf", width = 15, height = 15)
 .plotSubTree(cecal.top, rslt.cecal.top100)
 dev.off()
 
-# rslt_data$node.pval["perm.jsmix",c(45,75)]
-# p.adjust(rslt_data$node.pval["perm.jsmix",], method = "BH")[c(45,75)]
-# p <- rslt_data$node.pval["perm.jsmix",]
-# n <- length(p)
-# nm <- names(p)
-# p0 <- setNames(p, nm)
-# nna <- !is.na(p)
-# p <- p[nna]
-# lp <- length(p)
-# i <- lp:1L
-# o <- order(p, decreasing = TRUE)
-# ro <- order(o)
-# p0[nna] <- pmin(1, cummin(98/i * p[o]))[ro]
-# p0[c(45,75)]
-# pmin(1, 98/i * p[o])[ro]
-# https://www.science.org/doi/full/10.1126/sciadv.abd6989
 
 pdf("../Figs/Cecal.boxscatter.pdf", width = 20, height = 10)
 .plotBoxScatter(cecal.top, rslt.cecal.top100, "Treatment", NULL, "pFat")
