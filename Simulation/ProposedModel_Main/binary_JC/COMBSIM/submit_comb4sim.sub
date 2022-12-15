@@ -1,0 +1,20 @@
+universe = vanilla
+log = logs/job.$(ClusterId).$(ProcId).log
+error = logs/job.$(ClusterId).$(ProcId).stderr
+output = logs/job.$(ClusterId).$(ProcId).stdout
+
+executable = run_comb4sim.sh
+arguments = $(causalType) $(nsample) $(A) $(B)
+requirements = (OpSysMajorVer =?= 8)
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = http://proxy.chtc.wisc.edu/SQUID/chtc/el8/R413.tar.gz, shared/Type$(causalType)/, shared/combRslt_sim.R
+transfer_output_files = $(outfile)
+transfer_output_remaps = "$(outfile)=../OUTPUT/shared/Type/$(outfile)"
+
+request_cpus = 1
+request_memory = 1GB
+request_disk = 1GB
+
+queue causalType,nsample,A,B,outfile from comb_sim.txt
