@@ -17,7 +17,7 @@ Here are brief descriptions for each folder, detailed explanations are commented
 
 * a folder named **Figs**, which contains the figures in the main text and supplementary information.
 
-* a folder named **Tabs**, which contains the tables in the main text and supplmentary information.
+* a folder named **Tabs**, which contains the tables in the main text and supplementary information.
 
 * a folder named **Simulation**, which contains the simulation shell scripts and R scripts.
   - **ProposedModel_Main**: The mediating OTUs are clustered on the tree. The tree is constructed from top 100 OTUs.
