@@ -30,8 +30,9 @@ Here are brief descriptions for each folder, detailed explanations are commented
   - Download a copy of R (R413.tar.gz) and create a portable copy of necessary R packages (See [tutorial](https://chtc.cs.wisc.edu/uw-research-computing/r-jobs.html)). By submitting the ./medtest.dag to High-Throughput Condor, you are expected to get a csv file in the corresponding *RESULT* folder.
   - generateData.R: Generate the zeeviD_\*.Rdata, which is used as a basis in the simulation.
   - generateTxt.R: Generate the input.txt and comb_sim.txt in *GETSIM* and *COMBSIM* folder, respectively.
-  - zeeviD.Rdata: phyloseq-object with top 100 OTUs.
-  - zeeviD_pseq_bacteria.Rdata: phyloseq-object with all 819 OTUs.
+  - generateSeqDepth.R: Generate the box plot of sequence depth between treatment and control group.
+  - runDACT.R: Evaluate the performance of other mediating test method (DACT).
+  - zeeviD_*.Rdata: The phyloseq-object used in the simulation.
 
 ## R Package
 
