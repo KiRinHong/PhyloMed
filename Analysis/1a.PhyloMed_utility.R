@@ -1,5 +1,5 @@
 phylomed <- function(treatment, mediators, outcome, tree, covariates = NULL, interaction = FALSE,  
-                     fdr.alpha = 0.05, n.perm = 1e5, perm.prec = 0.1, verbose = FALSE){
+                     fdr.alpha = 0.05, n.perm = 1e5, perm.prec = 0.1, verbose = FALSE, pseudoCount){
   #treatment = Trt; mediators = M; outcome = Y; covariates = covariate; interaction = FALSE; fdr.alpha = 0.1; n.perm = 1e5; perm.prec = 0.05; verbose = T
   M = mediators
   K = .ntaxa(tree)
@@ -39,7 +39,7 @@ phylomed <- function(treatment, mediators, outcome, tree, covariates = NULL, int
     }else{
       Mc = cbind(Mc.left, Mc.right)
     }
-    Mc2 = Mc + 0.5
+    Mc2 = Mc + pseudoCount
     idx = which(rowSums(Mc) != 0)
     if(length(idx) != 0){
       Trt = Trt.ori[idx]; conf = conf.ori[idx,,drop=FALSE]; outcome = outcome.ori[idx]
@@ -254,38 +254,76 @@ phylomed <- function(treatment, mediators, outcome, tree, covariates = NULL, int
   alpha2.perm = .pi0_JC(na.omit(abs(qnorm(pval.beta.perm/2, lower.tail = FALSE))*sign(z.stat.beta)))
   
   rawp.asym.js = pmax(pval.alpha.asym, pval.beta.asym)
-  tmp.asym = .nullEstimation(pval.alpha.asym, pval.beta.asym, alpha1.asym, alpha2.asym)
-  rawp.asym = tmp.asym$rawp
-  if(length(which(rawp.asym==0))>0)  rawp.asym[rawp.asym == 0] = runif(length(which(rawp.asym==0)), min = 0, max = 1e-7)
-  null.prop.est.asym = c(tmp.asym$alpha00, tmp.asym$alpha10, tmp.asym$alpha01)
-  names(null.prop.est.asym) = c("H00","H10","H01")
   
-  rawp.asym.rm = na.omit(rawp.asym)
-  L = length(rawp.asym.rm)
-  globalp.asym = c(min(L * rawp.asym.rm/rank(rawp.asym.rm)), 
-                   1 - pchisq(-2 * sum(log(rawp.asym.rm)), df = 2 * L), 
-                   p.hmp(rawp.asym.rm, w = rep(1/L, L), L = L))
-  names(globalp.asym) = c("Simes", "Fisher", "HMP")
+  tmp.asym.prod = .nullEstimation_prod(pval.alpha.asym, pval.beta.asym, alpha1.asym, alpha2.asym)
+  tmp.asym.minus = .nullEstimation_minus(pval.alpha.asym, pval.beta.asym, alpha1.asym, alpha2.asym, z.stat.alpha, z.stat.beta)
+  
+  rawp.asym.prod = tmp.asym.prod$rawp
+  if(length(which(rawp.asym.prod==0))>0)  rawp.asym.prod[rawp.asym.prod == 0] = runif(length(which(rawp.asym.prod==0)), min = 0, max = 1e-8)
+  null.prop.est.asym.prod = c(tmp.asym.prod$alpha00, tmp.asym.prod$alpha10, tmp.asym.prod$alpha01)
+  names(null.prop.est.asym.prod) = c("H00","H10","H01")
+  
+  rawp.asym.prod.rm = na.omit(rawp.asym.prod)
+  L = length(rawp.asym.prod.rm)
+  globalp.asym.prod = c(min(L * rawp.asym.prod.rm/rank(rawp.asym.prod.rm)), 
+                        1 - pchisq(-2 * sum(log(rawp.asym.prod.rm)), df = 2 * L), 
+                        p.hmp(rawp.asym.prod.rm, w = rep(1/L, L), L = L))
+  names(globalp.asym.prod) = paste0("Prod.", c("Simes", "Fisher", "HMP"))
+  
+  rawp.asym.minus = tmp.asym.minus$rawp
+  if(length(which(rawp.asym.minus==0))>0)  rawp.asym.minus[rawp.asym.minus == 0] = runif(length(which(rawp.asym.minus==0)), min = 0, max = 1e-8)
+  null.prop.est.asym.minus = c(tmp.asym.minus$alpha00, tmp.asym.minus$alpha10, tmp.asym.minus$alpha01)
+  names(null.prop.est.asym.minus) = c("H00","H10","H01")
+  
+  rawp.asym.minus.rm = na.omit(rawp.asym.minus)
+  L = length(rawp.asym.minus.rm)
+  globalp.asym.minus = c(min(L * rawp.asym.minus.rm/rank(rawp.asym.minus.rm)), 
+                        1 - pchisq(-2 * sum(log(rawp.asym.minus.rm)), df = 2 * L), 
+                        p.hmp(rawp.asym.minus.rm, w = rep(1/L, L), L = L))
+  names(globalp.asym.minus) = paste0("Minus.", c("Simes", "Fisher", "HMP"))
   
   rawp.perm.js = pmax(pval.alpha.perm, pval.beta.perm)
-  tmp.perm = .nullEstimation(pval.alpha.perm, pval.beta.perm, alpha1.perm, alpha2.perm)
-  rawp.perm = tmp.perm$rawp
-  if(length(which(rawp.perm==0))>0)  rawp.perm[rawp.perm == 0] = runif(length(which(rawp.perm==0)), min = 0, max = 1e-7)
-  null.prop.est.perm = c(tmp.perm$alpha00, tmp.perm$alpha10, tmp.perm$alpha01)
-  names(null.prop.est.perm) = c("H00","H10","H01")
+  tmp.perm.prod = .nullEstimation_prod(pval.alpha.perm, pval.beta.perm, alpha1.perm, alpha2.perm)
+  tmp.perm.minus = .nullEstimation_minus(pval.alpha.perm, pval.beta.perm, alpha1.perm, alpha2.perm,
+                                        abs(qnorm(pval.alpha.perm/2, lower.tail = FALSE))*sign(z.stat.alpha),
+                                        abs(qnorm(pval.beta.perm/2, lower.tail = FALSE))*sign(z.stat.beta))
+
+  rawp.perm.prod = tmp.perm.prod$rawp
+  if(length(which(rawp.perm.prod==0))>0)  rawp.perm.prod[rawp.perm.prod == 0] = runif(length(which(rawp.perm.prod==0)), min = 0, max = 1e-8)
+  null.prop.est.perm.prod = c(tmp.perm.prod$alpha00, tmp.perm.prod$alpha10, tmp.perm.prod$alpha01)
+  names(null.prop.est.perm.prod) = c("H00","H10","H01")
   
-  rawp.perm.rm = na.omit(rawp.perm)
-  globalp.perm = c(min(L * rawp.perm.rm/rank(rawp.perm.rm)), 
-                   1 - pchisq(-2 * sum(log(rawp.perm.rm)), df = 2 * L), 
-                   p.hmp(rawp.perm.rm, w = rep(1/L, L), L = L))
-  names(globalp.perm) = c("Simes", "Fisher", "HMP")
+  rawp.perm.prod.rm = na.omit(rawp.perm.prod)
+  globalp.perm.prod = c(min(L * rawp.perm.prod.rm/rank(rawp.perm.prod.rm)), 
+                        1 - pchisq(-2 * sum(log(rawp.perm.prod.rm)), df = 2 * L), 
+                        p.hmp(rawp.perm.prod.rm, w = rep(1/L, L), L = L))
+  names(globalp.perm.prod) = paste0("Prod.", c("Simes", "Fisher", "HMP"))
   
-  rslt = list(PhyloMed.A = list(node.pval.jsmix = rawp.asym, node.pval.js = rawp.asym.js, node.pval.sobel = rawp.sobel,
+  rawp.perm.minus = tmp.perm.minus$rawp
+  if(length(which(rawp.perm.minus==0))>0)  rawp.perm.minus[rawp.perm.minus == 0] = runif(length(which(rawp.perm.minus==0)), min = 0, max = 1e-8)
+  null.prop.est.perm.minus = c(tmp.perm.minus$alpha00, tmp.perm.minus$alpha10, tmp.perm.minus$alpha01)
+  names(null.prop.est.perm.minus) = c("H00","H10","H01")
+  
+  rawp.perm.minus.rm = na.omit(rawp.perm.minus)
+  globalp.perm.minus = c(min(L * rawp.perm.minus.rm/rank(rawp.perm.minus.rm)), 
+                        1 - pchisq(-2 * sum(log(rawp.perm.minus.rm)), df = 2 * L), 
+                        p.hmp(rawp.perm.minus.rm, w = rep(1/L, L), L = L))
+  names(globalp.perm.minus) = paste0("Minus.", c("Simes", "Fisher", "HMP"))
+  
+  rslt = list(PhyloMed.A = list(node.pval.jsmix.prod = rawp.asym.prod, 
+                                node.pval.jsmix.minus = rawp.asym.minus,
+                                node.pval.js = rawp.asym.js, node.pval.sobel = rawp.sobel,
                                 pval.alpha = pval.alpha.asym, pval.beta = pval.beta.asym,
-                                null.prop = null.prop.est.asym, global.pval = globalp.asym),
-              PhyloMed.P = list(node.pval.jsmix = rawp.perm, node.pval.js = rawp.perm.js,
+                                null.prop.prod = null.prop.est.asym.prod, 
+                                null.prop.minus = null.prop.est.asym.minus, 
+                                global.pval = c(globalp.asym.prod, globalp.asym.minus)),
+              PhyloMed.P = list(node.pval.jsmix.prod = rawp.perm.prod, 
+                                node.pval.jsmix.minus = rawp.perm.minus,
+                                node.pval.js = rawp.perm.js,
                                 pval.alpha = pval.alpha.perm, pval.beta = pval.beta.perm,
-                                null.prop = null.prop.est.perm, global.pval = globalp.perm))
+                                null.prop.prod = null.prop.est.perm.prod, 
+                                null.prop.minus = null.prop.est.perm.minus,
+                                global.pval = c(globalp.perm.prod, globalp.perm.minus)))
   return(rslt)
 }
 
@@ -615,7 +653,7 @@ phylomed <- function(treatment, mediators, outcome, tree, covariates = NULL, int
   return(tmp)
 }
 
-.nullEstimation <- function (pval.alpha, pval.beta, alpha1, alpha2) {
+.nullEstimation_prod <- function (pval.alpha, pval.beta, alpha1, alpha2) {
   # alpha00: a=0 and b=0
   # alpha01: a=0 and b!=0
   # alpha10: a!=0 and b=0
@@ -634,7 +672,9 @@ phylomed <- function(treatment, mediators, outcome, tree, covariates = NULL, int
   tmp = pmax(input.pvals[,1], input.pvals[,2])
   nmed = length(tmp)
   cdf12 = input.pvals
-  input.pvals = input.pvals + runif(tmp, min = 0, max = 1e-7)
+  if(length(input.pvals == 1) > 0)
+    input.pvals[input.pvals == 1] = input.pvals[input.pvals == 1] - runif(length(input.pvals == 1), min = 0, max = 1e-7)
+  input.pvals = input.pvals + runif(length(tmp)*2, min = 0, max = 1e-8)
   xx1 = c(0, input.pvals[order(input.pvals[, 1]), 1])
   yy1 = c(0, seq(1, nmed, by = 1)/nmed)
   gfit1 = gcmlcm(xx1, yy1, type = "lcm")
@@ -697,6 +737,281 @@ phylomed <- function(treatment, mediators, outcome, tree, covariates = NULL, int
   return(rslt)
 }
 
+.nullEstimation_minus <- function (pval.alpha, pval.beta, alpha1, alpha2, z1, z2) {
+  # alpha00: a=0 and b=0
+  # alpha01: a=0 and b!=0
+  # alpha10: a!=0 and b=0
+  # pval.alpha=pval.alpha.perm; pval.beta=pval.beta.perm; alpha1=alpha1.perm; alpha2=alpha2.perm; z1=z.stat.alpha; z2=z.stat.beta
+  input.pvals = cbind(pval.alpha, pval.beta)
+  input.z = cbind(z1, z2)
+  idx.na = which(!complete.cases(input.pvals))
+  input.pvals = input.pvals[complete.cases(input.pvals), ]
+  input.z = input.z[complete.cases(input.z), ]
+  z.max = z.min = numeric(nrow(input.z))
+  for (i in 1:nrow(input.z)) {
+    z.max[i] = ifelse(abs(input.z[i,1]) >= abs(input.z[i,2]), input.z[i,1], input.z[i,2])
+    z.min[i] = ifelse(abs(input.z[i,1]) <= abs(input.z[i,2]), input.z[i,1], input.z[i,2])
+  }
+  
+  w = .pi0_JC(z.min)
+  alphastar = min(w, 1)
+  alpha00 = min(alpha1+alpha2-alphastar, 1)
+  alpha10 = max(alphastar-alpha1, 0)
+  alpha01 = max(alphastar-alpha2, 0)
+  alpha11 = max(1-alphastar, 0)
+  w = alpha00+alpha01+alpha10
+  alpha00.r = alpha00/w
+  alpha01.r = alpha01/w
+  alpha10.r = alpha10/w
+  alpha1.r = alpha00.r + alpha01.r
+  alpha2.r = alpha00.r + alpha10.r
+  
+  tmp = pmax(input.pvals[,1], input.pvals[,2])
+  nmed = length(tmp)
+  cdf12 = input.pvals
+  if(length(which(input.pvals == 1)) > 0)
+    input.pvals[input.pvals == 1] = input.pvals[input.pvals == 1] - runif(length(input.pvals == 1), min = 0, max = 1e-7)
+  input.pvals = input.pvals + runif(length(tmp)*2, min = 0, max = 1e-8)
+  xx1 = c(0, input.pvals[order(input.pvals[, 1]), 1])
+  yy1 = c(0, seq(1, nmed, by = 1)/nmed)
+  gfit1 = gcmlcm(xx1, yy1, type = "lcm")
+  xknots1 = gfit1$x.knots[-1]
+  Fknots1 = cumsum(diff(gfit1$x.knots) * gfit1$slope.knots)
+  xx2 = c(0, input.pvals[order(input.pvals[, 2]), 2])
+  yy2 = c(0, seq(1, nmed, by = 1)/nmed)
+  gfit2 = gcmlcm(xx2, yy2, type = "lcm")
+  xknots2 = gfit2$x.knots[-1]
+  Fknots2 = cumsum(diff(gfit2$x.knots) * gfit2$slope.knots)
+  if (alpha1.r != 1){
+    Fknots1 = (Fknots1 - alpha1.r * xknots1)/(1 - alpha1.r)
+  }else{
+    Fknots1 = rep(0, length(xknots1))
+  }
+  if (alpha2.r != 1){
+    Fknots2 = (Fknots2 - alpha2.r * xknots2)/(1 - alpha2.r)
+  }else{
+    Fknots2 = rep(0, length(xknots2))
+  }
+  orderq1 = orderq2 = gcdf1 = gcdf2 = tmp
+  for (i in 1:length(xknots1)) {
+    if (i == 1) {
+      gcdf1[orderq1 <= xknots1[i]] = (Fknots1[i]/xknots1[i]) * orderq1[orderq1 <= xknots1[i]]
+    }
+    else {
+      if (sum(orderq1 > xknots1[i - 1] & orderq1 <= xknots1[i]) > 0) {
+        temp = orderq1[orderq1 > xknots1[i - 1] & orderq1 <= xknots1[i]]
+        gcdf1[orderq1 > xknots1[i - 1] & orderq1 <= 
+                xknots1[i]] = Fknots1[i - 1] + (Fknots1[i] - 
+                                                  Fknots1[i - 1])/(xknots1[i] - xknots1[i - 
+                                                                                          1]) * (temp - xknots1[i - 1])
+      }
+    }
+  }
+  for (i in 1:length(xknots2)) {
+    if (i == 1) {
+      gcdf2[orderq2 <= xknots2[i]] = (Fknots2[i]/xknots2[i]) * orderq2[orderq2 <= xknots2[i]]
+    }
+    else {
+      if (sum(orderq2 > xknots2[i - 1] & orderq2 <= xknots2[i]) > 0) {
+        temp = orderq2[orderq2 > xknots2[i - 1] & orderq2 <= xknots2[i]]
+        gcdf2[orderq2 > xknots2[i - 1] & orderq2 <= 
+                xknots2[i]] = Fknots2[i - 1] + (Fknots2[i] - 
+                                                  Fknots2[i - 1])/(xknots2[i] - xknots2[i - 
+                                                                                          1]) * (temp - xknots2[i - 1])
+      }
+    }
+  }
+  gcdf1 = ifelse(gcdf1 > 1, 1, gcdf1)
+  gcdf2 = ifelse(gcdf2 > 1, 1, gcdf2)
+  cdf12[, 1] = gcdf1
+  cdf12[, 2] = gcdf2
+  rawp = (tmp * cdf12[, 2] * alpha01.r) + (tmp * cdf12[, 1] * alpha10.r) + (tmp^2 * alpha00.r)
+  if(length(which(rawp==0))>0)
+    rawp[rawp == 0] = runif(length(which(rawp==0)), min = 0, max = 1e-8)
+  
+  rawp.wNA = numeric(length(pval.alpha))
+  if(length(idx.na) > 0){
+    rawp.wNA[idx.na] = NA
+    rawp.wNA[-idx.na] = rawp
+  }else{
+    rawp.wNA = rawp
+  }
+  rslt = list(alpha10 = alpha10.r, alpha01 = alpha01.r, alpha00 = alpha00.r, alpha1 = alpha1, alpha2 = alpha2, rawp = rawp.wNA)
+  return(rslt)
+}
+# .nullEstimation_pmax_multi <- function (pval.alpha, pval.beta, alpha1, alpha2, z1, z2) {
+#   # alpha00: a=0 and b=0
+#   # alpha01: a=0 and b!=0
+#   # alpha10: a!=0 and b=0
+#   # pval.alpha=pval.alpha.perm; pval.beta=pval.beta.perm; alpha1=alpha1.perm; alpha2=alpha2.perm; z1=z.stat.alpha; z2=z.stat.beta
+#   input.pvals = cbind(pval.alpha, pval.beta)
+#   input.z = cbind(z1, z2)
+#   idx.na = which(!complete.cases(input.pvals))
+#   input.pvals = input.pvals[complete.cases(input.pvals), ]
+#   input.z = input.z[complete.cases(input.z), ]
+#   z.max = z.min = numeric(nrow(input.z))
+#   for (i in 1:nrow(input.z)) {
+#     z.max[i] = ifelse(abs(input.z[i,1]) >= abs(input.z[i,2]), input.z[i,1], input.z[i,2])
+#     z.min[i] = ifelse(abs(input.z[i,1]) <= abs(input.z[i,2]), input.z[i,1], input.z[i,2])
+#   }
+#   
+#   w = .pi0_JC(z.min)
+#   alphastar = min(w, 1)
+#   alpha00 = min(alpha1+alpha2-alphastar, 1)
+#   alpha10 = max(alphastar-alpha1, 0)
+#   alpha01 = max(alphastar-alpha2, 0)
+#   alpha11 = max(1-alphastar, 0)
+#   w = alpha00+alpha01+alpha10
+#   alpha00.r = alpha00/w
+#   alpha01.r = alpha01/w
+#   alpha10.r = alpha10/w
+#   # alpha1 = min(alpha00 + alpha01, 1)
+#   # alpha2 = min(alpha00 + alpha10, 1)
+#   alpha1.r = alpha00.r + alpha01.r
+#   alpha2.r = alpha00.r + alpha10.r
+#   
+#   tmp = pmax(input.pvals[,1], input.pvals[,2])
+#   nmed = length(tmp)
+#   cdf12 = input.pvals
+#   if(length(which(input.pvals == 1)) > 0)
+#     input.pvals[input.pvals == 1] = input.pvals[input.pvals == 1] - runif(length(input.pvals == 1), min = 0, max = 1e-7)
+#   input.pvals = input.pvals + runif(length(tmp)*2, min = 0, max = 1e-8)
+#   xx1 = c(0, input.pvals[order(input.pvals[, 1]), 1])
+#   yy1 = c(0, seq(1, nmed, by = 1)/nmed)
+#   gfit1 = gcmlcm(xx1, yy1, type = "lcm")
+#   xknots1 = gfit1$x.knots[-1]
+#   Fknots1 = cumsum(diff(gfit1$x.knots) * gfit1$slope.knots)
+#   xx2 = c(0, input.pvals[order(input.pvals[, 2]), 2])
+#   yy2 = c(0, seq(1, nmed, by = 1)/nmed)
+#   gfit2 = gcmlcm(xx2, yy2, type = "lcm")
+#   xknots2 = gfit2$x.knots[-1]
+#   Fknots2 = cumsum(diff(gfit2$x.knots) * gfit2$slope.knots)
+#   if (alpha1.r != 1){
+#     Fknots1 = (Fknots1 - alpha1.r * xknots1)/(1 - alpha1.r)
+#   }else{
+#     Fknots1 = rep(0, length(xknots1))
+#   }
+#   if (alpha2.r != 1){
+#     Fknots2 = (Fknots2 - alpha2.r * xknots2)/(1 - alpha2.r)
+#   }else{
+#     Fknots2 = rep(0, length(xknots2))
+#   }
+#   orderq1 = orderq2 = gcdf1 = gcdf2 = tmp
+#   for (i in 1:length(xknots1)) {
+#     if (i == 1) {
+#       gcdf1[orderq1 <= xknots1[i]] = (Fknots1[i]/xknots1[i]) * orderq1[orderq1 <= xknots1[i]]
+#     }
+#     else {
+#       if (sum(orderq1 > xknots1[i - 1] & orderq1 <= xknots1[i]) > 0) {
+#         temp = orderq1[orderq1 > xknots1[i - 1] & orderq1 <= xknots1[i]]
+#         gcdf1[orderq1 > xknots1[i - 1] & orderq1 <= 
+#                 xknots1[i]] = Fknots1[i - 1] + (Fknots1[i] - 
+#                                                   Fknots1[i - 1])/(xknots1[i] - xknots1[i - 
+#                                                                                           1]) * (temp - xknots1[i - 1])
+#       }
+#     }
+#   }
+#   for (i in 1:length(xknots2)) {
+#     if (i == 1) {
+#       gcdf2[orderq2 <= xknots2[i]] = (Fknots2[i]/xknots2[i]) * orderq2[orderq2 <= xknots2[i]]
+#     }
+#     else {
+#       if (sum(orderq2 > xknots2[i - 1] & orderq2 <= xknots2[i]) > 0) {
+#         temp = orderq2[orderq2 > xknots2[i - 1] & orderq2 <= xknots2[i]]
+#         gcdf2[orderq2 > xknots2[i - 1] & orderq2 <= 
+#                 xknots2[i]] = Fknots2[i - 1] + (Fknots2[i] - 
+#                                                   Fknots2[i - 1])/(xknots2[i] - xknots2[i - 
+#                                                                                           1]) * (temp - xknots2[i - 1])
+#       }
+#     }
+#   }
+#   gcdf1 = ifelse(gcdf1 > 1, 1, gcdf1)
+#   gcdf2 = ifelse(gcdf2 > 1, 1, gcdf2)
+#   cdf12[, 1] = gcdf1
+#   cdf12[, 2] = gcdf2
+#   rawp = (tmp * cdf12[, 2] * alpha01.r) + (tmp * cdf12[, 1] * alpha10.r) + (tmp^2 * alpha00.r)
+#   if(length(which(rawp==0))>0)
+#     rawp[rawp == 0] = runif(length(which(rawp==0)), min = 0, max = 1e-8)
+#   
+#   w.tmp = .pi0_JC(abs(qnorm(rawp/2, lower.tail = FALSE))*sign(input.z[,1]*input.z[,2]))
+#   alphastar.new = min(w.tmp, 1)
+#   iter = 0
+#   while (all(abs(alphastar.new - alphastar) > 0.001, iter < 1000)) {
+#     alphastar = alphastar.new
+#     alpha00 = min(alpha1+alpha2-alphastar, 1)
+#     alpha10 = max(alphastar-alpha1, 0)
+#     alpha01 = max(alphastar-alpha2, 0)
+#     alpha11 = max(1-alphastar, 0)
+#     w = alpha00+alpha01+alpha10
+#     alpha00.r = alpha00/w
+#     alpha01.r = alpha01/w
+#     alpha10.r = alpha10/w
+#     # alpha1 = min(alpha00 + alpha01, 1)
+#     # alpha2 = min(alpha00 + alpha10, 1)
+#     alpha1.r = alpha00.r + alpha01.r
+#     alpha2.r = alpha00.r + alpha10.r
+#     
+#     xknots1 = gfit1$x.knots[-1]
+#     Fknots1 = cumsum(diff(gfit1$x.knots) * gfit1$slope.knots)
+#     xknots2 = gfit2$x.knots[-1]
+#     Fknots2 = cumsum(diff(gfit2$x.knots) * gfit2$slope.knots)
+#     if (alpha1.r != 1) 
+#       Fknots1 = (Fknots1 - alpha1.r * xknots1)/(1 - alpha1.r)
+#     else Fknots1 = rep(0, length(xknots1))
+#     if (alpha2.r != 1) 
+#       Fknots2 = (Fknots2 - alpha2.r * xknots2)/(1 - alpha2.r)
+#     else Fknots2 = rep(0, length(xknots2))
+#     orderq1 = orderq2 = gcdf1 = gcdf2 = tmp
+#     for (i in 1:length(xknots1)) {
+#       if (i == 1) {
+#         gcdf1[orderq1 <= xknots1[i]] = (Fknots1[i]/xknots1[i]) * orderq1[orderq1 <= xknots1[i]]
+#       }
+#       else {
+#         if (sum(orderq1 > xknots1[i - 1] & orderq1 <= xknots1[i]) > 0) {
+#           temp = orderq1[orderq1 > xknots1[i - 1] & orderq1 <= xknots1[i]]
+#           gcdf1[orderq1 > xknots1[i - 1] & orderq1 <= 
+#                   xknots1[i]] = Fknots1[i - 1] + (Fknots1[i] - 
+#                                                     Fknots1[i - 1])/(xknots1[i] - xknots1[i - 
+#                                                                                             1]) * (temp - xknots1[i - 1])
+#         }
+#       }
+#     }
+#     for (i in 1:length(xknots2)) {
+#       if (i == 1) {
+#         gcdf2[orderq2 <= xknots2[i]] = (Fknots2[i]/xknots2[i]) * orderq2[orderq2 <= xknots2[i]]
+#       }
+#       else {
+#         if (sum(orderq2 > xknots2[i - 1] & orderq2 <= xknots2[i]) > 0) {
+#           temp = orderq2[orderq2 > xknots2[i - 1] & orderq2 <= xknots2[i]]
+#           gcdf2[orderq2 > xknots2[i - 1] & orderq2 <= 
+#                   xknots2[i]] = Fknots2[i - 1] + (Fknots2[i] - 
+#                                                     Fknots2[i - 1])/(xknots2[i] - xknots2[i - 
+#                                                                                             1]) * (temp - xknots2[i - 1])
+#         }
+#       }
+#     }
+#     gcdf1 = ifelse(gcdf1 > 1, 1, gcdf1)
+#     gcdf2 = ifelse(gcdf2 > 1, 1, gcdf2)
+#     cdf12[, 1] = gcdf1
+#     cdf12[, 2] = gcdf2
+#     rawp = (tmp * cdf12[, 2] * alpha01.r) + (tmp * cdf12[, 1] * alpha10.r) + (tmp^2 * alpha00.r)
+#     if(length(which(rawp==0))>0)
+#       rawp[rawp == 0] = runif(length(which(rawp==0)), min = 0, max = 1e-8)
+#     w.tmp = .pi0_JC(abs(qnorm(rawp/2, lower.tail = FALSE))*sign(input.z[,1]*input.z[,2]))
+#     alphastar.new = min(w.tmp, 1)
+#     iter = iter + 1
+#   }  
+#   rawp.wNA = numeric(length(pval.alpha))
+#   if(length(idx.na) > 0){
+#     rawp.wNA[idx.na] = NA
+#     rawp.wNA[-idx.na] = rawp
+#   }else{
+#     rawp.wNA = rawp
+#   }
+#   print(alphastar.new)
+#   rslt = list(alpha10 = alpha10.r, alpha01 = alpha01.r, alpha00 = alpha00.r, alpha1 = alpha1, alpha2 = alpha2, rawp = rawp.wNA)
+#   return(rslt)
+# }
 # .choose_b <- function(alpha, c) {
 #   error <- alpha * c
 #   B <- alpha*(1 - alpha) / (error^2)

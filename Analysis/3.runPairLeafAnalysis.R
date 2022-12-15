@@ -9,7 +9,7 @@ rm(list = ls())
 setwd("~/Documents/Project/PhyloMed/Analysis/")
 source("1a.PhyloMed_utility.R")
 generatePairLeafMat <- function(data.lst, rslt.lst, treatment, covariate, outcome){
-  signode.id = as.numeric(unlist(strsplit(rslt.lst$sig.node["perm.jsmix.BH"], split = ",")))
+  signode.id = as.numeric(unlist(strsplit(rslt.lst$sig.node["perm.jsmix.prod.BH"], split = ",")))
   pval.js.mat.lst = vector("list", length(signode.id))
   names(pval.js.mat.lst) = paste0("Node", as.character(signode.id))
   tree = data.lst$tree
@@ -109,7 +109,7 @@ generatePairLeafMat <- function(data.lst, rslt.lst, treatment, covariate, outcom
 
 load("../Data/Deriveddata/rslt.runModel.rda")
 load("../Data/Deriveddata/Cecal.filter20top100.rda")
-tmp = generatePairLeafMat(cecal.top, rslt.cecal.top100, treatment = "Treatment", covariate = NULL, outcome = "pFat")
+tmp = generatePairLeafMat(cecal.top, rslt.cecal.top100.psc05, treatment = "Treatment", covariate = NULL, outcome = "pFat")
 View(tmp$Node45)
 View(tmp$Node75)
 
@@ -121,15 +121,15 @@ View(tmp)
 tmp = tax[tree$tip.label[(treestructure$descendant[.ntaxa(tree)+75,] == TRUE)],]
 View(tmp)
 
-rslt.cecal.top100$node.pval["perm.jsmix",45]
-rslt.cecal.top100$node.pval["perm.jsmix",75]
+rslt.cecal.top100.psc05$node.pval["perm.jsmix.prod",45]
+rslt.cecal.top100.psc05$node.pval["perm.jsmix.prod",75]
 
-rslt.cecal.top100$pval.alphabeta[c("perm.alpha","perm.beta"),45]
-rslt.cecal.top100$pval.alphabeta[c("perm.alpha","perm.beta"),75]
+rslt.cecal.top100.psc05$pval.alphabeta[c("perm.alpha","perm.beta"),45]
+rslt.cecal.top100.psc05$pval.alphabeta[c("perm.alpha","perm.beta"),75]
 
 load("../Data/Deriveddata/COMBO.filter20.rda")
-rslt.combo.filter20$sig.node["perm.jsmix.BH"]
-tmp = generatePairLeafMat(combo.filter, rslt.combo.filter20, treatment = "fat", covariate = "calor", outcome = "bmi")
+rslt.combo.filter20.psc05$sig.node["perm.jsmix.prod.BH"]
+tmp = generatePairLeafMat(combo.filter, rslt.combo.filter20.psc05, treatment = "fat", covariate = "calor", outcome = "bmi")
 View(tmp$Node297)
 
 tree = combo.filter$tree
@@ -138,9 +138,9 @@ treestructure = .phylostructure(tree)
 tmp = tax[tree$tip.label[(treestructure$descendant[.ntaxa(tree)+297,] == TRUE)],]
 View(tmp)
 
-rslt.combo.filter20$node.pval["perm.jsmix",297]
+rslt.combo.filter20.psc05$node.pval["perm.jsmix.prod",297]
 # perm.jsmix 
 # 0.0001264831 
-rslt.combo.filter20$pval.alphabeta[c("perm.alpha","perm.beta"),297]
+rslt.combo.filter20.psc05$pval.alphabeta[c("perm.alpha","perm.beta"),297]
 # perm.alpha  perm.beta 
 # 0.00603787 0.00197000 

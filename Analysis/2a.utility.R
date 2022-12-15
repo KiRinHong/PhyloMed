@@ -8,12 +8,12 @@ library(lattice)
   treestructure = .phylostructure(tree)
   
   tree.vis = tree
-  rawp = rslt_data$node.pval["perm.jsmix",] # p.adjust(rslt_data$node.pval["perm.jsmix",], method = "BH")
+  rawp = rslt_data$node.pval["perm.jsmix.prod",] # p.adjust(rslt_data$node.pval["perm.jsmix",], method = "BH")
   tree.vis$node.label = rawp
   
   #sig.nodeID.HMP = as.numeric(unlist(strsplit(rslt_data$sig.node["perm.jsmix.HMP"], ",")))
-  sig.nodeID.BH = as.numeric(unlist(strsplit(rslt_data$sig.node["perm.jsmix.BH"], ",")))
-  min.id = which.min(rslt_data$node.pval["perm.jsmix",sig.nodeID.BH])
+  sig.nodeID.BH = as.numeric(unlist(strsplit(rslt_data$sig.node["perm.jsmix.prod.BH"], ",")))
+  min.id = which.min(rslt_data$node.pval["perm.jsmix.prod",sig.nodeID.BH])
   #mrca.id = getMRCA(tree, which(colSums(treestructure$descendant[sig.nodeID.BH+K,,drop=FALSE]) == 1)) - K
   
   # if(mrca.id %in% sig.nodeID.HMP){
@@ -53,8 +53,8 @@ library(lattice)
   # input_data = cecal.top; rslt_data = rslt.cecal.top100
   tree = input_data$tree
   sub_tree = subtrees(tree)
-  sig.nodeID.BH = as.numeric(unlist(strsplit(rslt_data$sig.node["perm.jsmix.BH"], ",")))
-  min.id = which.min(rslt_data$node.pval["perm.jsmix",sig.nodeID.BH])
+  sig.nodeID.BH = as.numeric(unlist(strsplit(rslt_data$sig.node["perm.jsmix.prod.BH"], ",")))
+  min.id = which.min(rslt_data$node.pval["perm.jsmix.prod",sig.nodeID.BH])
   sub_tree_node = sub_tree[[sig.nodeID.BH[min.id]]]
   
   p <- ggtree(sub_tree_node, layout = "rectangular", branch.length = "none") + #  geom_rootpoint(color="red", size=5) +
@@ -86,7 +86,7 @@ library(lattice)
   }else{
     conf = matrix(1, nrow = n.sample, ncol = 1)
   }
-  sig.nodeID.BH = as.numeric(unlist(strsplit(rslt_data$sig.node["perm.jsmix.BH"], ",")))
+  sig.nodeID.BH = as.numeric(unlist(strsplit(rslt_data$sig.node["perm.jsmix.prod.BH"], ",")))
   tree = input_data$tree
   K = .ntaxa(tree)
   treestructure = .phylostructure(tree)
@@ -153,7 +153,7 @@ library(lattice)
   }else{
     conf = matrix(1, nrow = n.sample, ncol = 1)
   }
-  sig.nodeID.BH = as.numeric(unlist(strsplit(rslt_data$sig.node["perm.jsmix.BH"], ",")))
+  sig.nodeID.BH = as.numeric(unlist(strsplit(rslt_data$sig.node["perm.jsmix.prod.BH"], ",")))
   tree = input_data$tree
   K = .ntaxa(tree)
   treestructure = .phylostructure(tree)
@@ -245,8 +245,8 @@ library(lattice)
   }else{
     conf = matrix(1, nrow = n.sample, ncol = 1)
   }
-  sig.nodeID.BH = as.numeric(unlist(strsplit(rslt_data$sig.node["perm.jsmix.BH"], ",")))
-  min.id = which.min(rslt_data$node.pval["perm.jsmix",sig.nodeID.BH])
+  sig.nodeID.BH = as.numeric(unlist(strsplit(rslt_data$sig.node["perm.jsmix.prod.BH"], ",")))
+  min.id = which.min(rslt_data$node.pval["perm.jsmix.prod",sig.nodeID.BH])
   
   tree = input_data$tree
   K = .ntaxa(tree)
@@ -367,7 +367,12 @@ library(lattice)
                       par.settings=list(superpose.symbol=list(pch=pch)), ...) {
   
   #error checking
-  pvalues = lapply(pvalues, .filterpval)
+  if(is.list(pvalues)){
+    pvalues = lapply(pvalues, .filterpval)
+  }else{
+    pvalues = .filterpval(pvalues)
+  }
+  
   if (length(pvalues)==0) stop("pvalue vector is empty, can't draw plot")
   if(!(class(pvalues)=="numeric" || 
        (class(pvalues)=="list" && all(sapply(pvalues, class)=="numeric"))))
@@ -504,4 +509,16 @@ theme_Publication <- function(base_size=14, base_family="") {
 
 .filterpval <- function(x){
   return(na.omit(x[x>0 & x<=1]))
+}
+
+.calEFDR.BH <- function(pval, causalNode, fdr.alpha = 0.05){
+  pval.adj = p.adjust(pval, method = "BH")
+  tp = length(which(pval.adj < fdr.alpha & causalNode == T))
+  fp = length(which(pval.adj < fdr.alpha & causalNode == F))
+  if(length(which(pval.adj < fdr.alpha)) == 0){
+    fdr = NA
+  }else{
+    fdr = fp / (tp + fp)
+  }
+  return(fdr)
 }
