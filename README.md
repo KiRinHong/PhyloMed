@@ -1,6 +1,6 @@
 ## File Description
 
-This repository is used for depositing the analysis scripts, derived data/results and corresponding figures for the paper "PhyloMed: a phylogeny-based test of mediation effect in microbiome". 
+This repository is used for depositing the analysis scripts, derived data/results and corresponding figures and tables for the paper "PhyloMed: a phylogeny-based test of mediation effect in microbiome". 
 
 Here are brief descriptions for each folder, detailed explanations are commented within code and described in the paper:
 
