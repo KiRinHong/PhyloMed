@@ -31,7 +31,6 @@ Here are brief descriptions for each folder, detailed explanations are commented
   - generateData.R: Generate the zeeviD_\*.Rdata, which is used as a basis in the simulation.
   - generateTxt.R: Generate the input.txt and comb_sim.txt in *GETSIM* and *COMBSIM* folder, respectively.
   - generateSeqDepth.R: Generate the box plot of sequence depth between treatment and control group.
-  - runDACT.R: Evaluate the performance of other mediating test method (DACT).
   - zeeviD_*.Rdata: The phyloseq-object used in the simulation.
 
 ## R Package
