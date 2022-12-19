@@ -27,12 +27,12 @@ p <- ggplot(dat_tmp, aes(x = Trt, y = outcome, shape = Trt, color = Trt)) +
   theme(legend.position="none") +
   labs(title = "", x = "Treatment", y = "Body fat (%)")
 p
-ggsave("../Figs/Cecal.boxplot.antibiotics_pFat.pdf", plot = p, width = 15, height = 15)
+ggsave("../Figs/S5.Cecal.boxplot.antibiotics_pFat.pdf", plot = p, width = 15, height = 15)
 
-pdf("../Figs/Cecal.tree.pdf", width = 20, height = 10)
+pdf("../Figs/4a.Cecal.tree.pdf", width = 20, height = 10)
 .plotTree(cecal.top, rslt.cecal.top100.psc05, "rectangular")
 dev.off()
-pdf("../Figs/Cecal.subtree.pdf", width = 15, height = 15)
+pdf("../Figs/4d.Cecal.subtree.pdf", width = 15, height = 15)
 .plotSubTree(cecal.top, rslt.cecal.top100.psc05)
 dev.off()
 
@@ -53,14 +53,14 @@ dev.off()
 # pmin(1, 98/i * p[o])[ro]
 # https://www.science.org/doi/full/10.1126/sciadv.abd6989
 
-pdf("../Figs/Cecal.boxscatter.pdf", width = 20, height = 10)
+pdf("../Figs/4c.Cecal.boxscatter.pdf", width = 20, height = 10)
 .plotBoxScatter(cecal.top, rslt.cecal.top100.psc05, "Treatment", NULL, "pFat")
 dev.off()
 
 rawp.list.cecal <- list("PhyloMed"=rslt.cecal.top100.psc05$node.pval["perm.jsmix.prod",],
                         "JS"=rslt.cecal.top100.psc05$node.pval["perm.js",],
                         "Sobel"=rslt.cecal.top100.psc05$node.pval["sobel",])
-pdf("../Figs/Cecal.qqplot.pdf", width = 10, height = 10)
+pdf("../Figs/4b.Cecal.qqplot.pdf", width = 10, height = 10)
 .qqunifPlot(rawp.list.cecal, auto.key=list(corner=c(.95,.05),padding.text=4,cex = 1.8), main = "",  pch = c(19,0,2), 
             par.settings = list(superpose.symbol = list(pch = c(19,0,2), cex = 1.5, cex.title = 1.5, col = "red")))
 dev.off()
@@ -81,23 +81,23 @@ p <- ggplot(dat_tmp, aes(x = Trt, y = outcome)) +
   theme(legend.position="none") +
   labs(title = "", x = "Fat intake", y = "BMI")
 p
-ggsave("../Figs/COMBO.scatterplot.fat_bmi.pdf", plot = p, width = 15, height = 15)
+ggsave("../Figs/S6.COMBO.scatterplot.fat_bmi.pdf", plot = p, width = 15, height = 15)
 
-pdf("../Figs/COMBO.tree.pdf", width = 15, height = 15)
+pdf("../Figs/S7.COMBO.tree.pdf", width = 15, height = 15)
 .plotTree(combo.filter, rslt.combo.filter20.psc05, "circular")
 dev.off()
-pdf("../Figs/COMBO.scatterpie.pdf", width = 15, height = 15)
+pdf("../Figs/5.COMBO.scatterpie.pdf", width = 15, height = 15)
 .plotScatterPie(combo.filter, rslt.combo.filter20.psc05, "fat", "calor", "bmi")
 dev.off()
 
-rawp.list.combo <- list("PhyloMed"=rslt.combo.filter20.psc05$node.pval["perm.jsmix.prod",],
-                        "JS"=rslt.combo.filter20.psc05$node.pval["perm.js",],
-                        "Sobel"=rslt.combo.filter20.psc05$node.pval["sobel",])
-
-pdf("../Figs/COMBO.qqplot.pdf", width = 10, height = 10)
-.qqunifPlot(rawp.list.combo, auto.key=list(corner=c(.95,.05),padding.text=4,cex = 1.8), main = "",  pch = c(19,0,2), 
-            par.settings = list(superpose.symbol = list(pch = c(19,0,2), cex = 1.5, cex.title = 1.5, col = "red")))
-dev.off()
+# rawp.list.combo <- list("PhyloMed"=rslt.combo.filter20.psc05$node.pval["perm.jsmix.prod",],
+#                         "JS"=rslt.combo.filter20.psc05$node.pval["perm.js",],
+#                         "Sobel"=rslt.combo.filter20.psc05$node.pval["sobel",])
+# 
+# pdf("../Figs/COMBO.qqplot.pdf", width = 10, height = 10)
+# .qqunifPlot(rawp.list.combo, auto.key=list(corner=c(.95,.05),padding.text=4,cex = 1.8), main = "",  pch = c(19,0,2), 
+#             par.settings = list(superpose.symbol = list(pch = c(19,0,2), cex = 1.5, cex.title = 1.5, col = "red")))
+# dev.off()
 
 ##### Simulation: qqplot continuous outcome #####
 # qq-plot, continuous outcome, n.sample = 200
@@ -157,32 +157,32 @@ my.pvalue.list.con01.s <-list("PhyloMed.A"=gp[,"simes.asym"],
                               "LDM-med"=gp[,"ldm.med.global"])
 
 setEPS()# Set postscript arguments
-postscript("../Figs/qq_lscon00.eps")  
+postscript("../Figs/2.qq_lscon00.eps")  
 .qqunifPlot(my.pvalue.list.con00.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex = 1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2, 
                                                         col = c("pink","red","green","blue","grey","orange"))))
 dev.off()
-postscript("../Figs/qq_lscon10.eps")  
+postscript("../Figs/2.qq_lscon10.eps")  
 .qqunifPlot(my.pvalue.list.con10.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex = 1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
                                                         col = c("pink","red","green","blue","grey","orange"))))
 dev.off()
-postscript("../Figs/qq_lscon01.eps")
+postscript("../Figs/2.qq_lscon01.eps")
 .qqunifPlot(my.pvalue.list.con01.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex = 1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2, 
                                                         col = c("pink","red","green","blue","grey","orange"))))
 dev.off()
-postscript("../Figs/qq_sscon00.eps")  
+postscript("../Figs/2.qq_sscon00.eps")  
 .qqunifPlot(my.pvalue.list.con00.s, auto.key=list(corner=c(.95,.05),padding.text=4, cex = 1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2, 
                                                         col = c("pink","red","green","blue","grey"))))
 dev.off()
-postscript("../Figs/qq_sscon10.eps")
+postscript("../Figs/2.qq_sscon10.eps")
 .qqunifPlot(my.pvalue.list.con10.s, auto.key=list(corner=c(.95,.05),padding.text=4, cex = 1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2, 
                                                         col = c("pink","red","green","blue","grey"))))
 dev.off()
-postscript("../Figs/qq_sscon01.eps")  
+postscript("../Figs/2.qq_sscon01.eps")  
 .qqunifPlot(my.pvalue.list.con01.s, auto.key=list(corner=c(.95,.05),padding.text=4, cex = 1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2, 
                                                         col = c("pink","red","green","blue","grey"))))
@@ -243,32 +243,32 @@ my.pvalue.list.bin01.s <-list("PhyloMed.A"=gp[,"simes.asym"],
                               "LDM-med"=na.omit(gp[,"ldm.med.global"]))
 
 setEPS()# Set postscript arguments
-postscript("../Figs/qq_lsbin00.eps")  
+postscript("../Figs/S1.qq_lsbin00.eps")  
 .qqunifPlot(my.pvalue.list.bin00.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
                                                         col = c("pink","red","green","blue","grey"))))
 dev.off()
-postscript("../Figs/qq_lsbin10.eps")  
+postscript("../Figs/S1.qq_lsbin10.eps")  
 .qqunifPlot(my.pvalue.list.bin10.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
                                                         col = c("pink","red","green","blue","grey"))))
 dev.off()
-postscript("../Figs/qq_lsbin01.eps")  
+postscript("../Figs/S1.qq_lsbin01.eps")  
 .qqunifPlot(my.pvalue.list.bin01.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
                                                         col = c("pink","red","green","blue","grey"))))
 dev.off()
-postscript("../Figs/qq_ssbin00.eps")  
+postscript("../Figs/S1.qq_ssbin00.eps")  
 .qqunifPlot(my.pvalue.list.bin00.s, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2, 
                                                         col = c("pink","red","green","blue","grey"))))
 dev.off()
-postscript("../Figs/qq_ssbin10.eps")  
+postscript("../Figs/S1.qq_ssbin10.eps")  
 .qqunifPlot(my.pvalue.list.bin10.s, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
                                                         col = c("pink","red","green","blue","grey"))))
 dev.off()
-postscript("../Figs/qq_ssbin01.eps")  
+postscript("../Figs/S1.qq_ssbin01.eps")  
 .qqunifPlot(my.pvalue.list.bin01.s, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
                                                         col = c("pink","red","green","blue","grey"))))
@@ -306,7 +306,7 @@ p <- ggplot(na.omit(power.tab.long), aes(x=numberoftaxa, y=value)) +
     legend.text = element_text(margin = margin(r = 15, unit = "pt"))) +
   guides(fill = guide_legend(nrow = 1, byrow = TRUE))
 p
-ggsave("../Figs/power_barplot_ClusterdTaxa.pdf", plot = p, width = 20, height = 15)
+ggsave("../Figs/3.power_barplot_ClusterdTaxa.pdf", plot = p, width = 20, height = 15)
 
 ##### Simulation: power bar plot, continuous and binary outcome, all taxa, A=0.5 B=0.5 #####
 method.sel <- c("dist.omn.MedTest", "dist.bonf.MODIMA", "hmp.asym", "hmp.perm", "ldm.med.global")
@@ -339,7 +339,7 @@ p <- ggplot(na.omit(power.tab.long), aes(x=numberoftaxa, y=value)) +
     legend.text = element_text(margin = margin(r = 15, unit = "pt"))) +
   guides(fill = guide_legend(nrow = 1, byrow = TRUE))
 p
-ggsave("../Figs/power_barplot_RareTaxa.pdf", plot = p, width = 20, height = 15)
+ggsave("../Figs/S2.power_barplot_allTaxa.pdf", plot = p, width = 20, height = 15)
 
 
 # #### Archive: power bar plot, supp, continuous outcome, N=200 and small effect size ####
@@ -422,7 +422,7 @@ p <- ggplot(na.omit(power.tab.long), aes(x=numberoftaxa, y=value)) +
     legend.text = element_text(margin = margin(r = 15, unit = "pt"))) +
   guides(fill = guide_legend(nrow = 1, byrow = TRUE))
 p
-ggsave("../Figs/power_barplot_IncreaseNumOfTaxa.pdf", plot = p, width = 20, height = 15)
+ggsave("../Figs/S3.power_barplot_ScatteredTaxa.pdf", plot = p, width = 20, height = 15)
 
 
 ##### Simulation: generate empirical FDR curve, N=200, effect size increase from A=0,1e-5,1e-4,1e-3,0.01,0.1,1 B=0.5 ####
@@ -452,7 +452,7 @@ p <- ggplot(tmp, aes(x=A, y=efdr.jsmix.perm.BH*100, group=group, color = factor(
   #labs(title = "", x = "Effect Size B", y = "Empirical FDR (%)")
   labs(title = "", x = bquote(log[10](A)), y = "Empirical FDR (%)")
 p
-ggsave("../Figs/lineplot_efdr_fixB_log10.pdf", plot = p, width = 10, height = 10)
+ggsave("../Figs/S4.lineplot_efdr_fixB_log10.pdf", plot = p, width = 10, height = 10)
 
 # #### Archive: generate empirical pFDR plot, N=200, effect size increase from A=1e-3,0.01,0.1,1 B=0.5####
 # tmp <- read.csv("../Simulation/IncreaseEffectSize/continuous/RESULT/Type1PowerAllCont_pFDR.csv", row.names = 1)
@@ -479,83 +479,91 @@ ggsave("../Figs/lineplot_efdr_fixB_log10.pdf", plot = p, width = 10, height = 10
 # p
 # ggsave("../Figs/lineplot_efdr_pFDR.pdf", plot = p, width = 10, height = 10)
 
-##### Simulation: generate qqplot of null taxa when exists causal taxa (non-null taxa) ####
-# continuous outcome, n = 200, causalType =1
-load("../Simulation/ProposedModel_Main/continuous_JC/OUTPUT/shared/Type/allType1Nsample200A0.5B0.5.Rdata")
-rawp.asym <- rslt_all$rawp.asym.jsmix
-rawp.asym.null <- rawp.asym[which(rslt_all$causalNode == 0)]
-rawp.asym.nonnull <- rawp.asym[which(rslt_all$causalNode == 1)]
-rawp.perm <- rslt_all$rawp.perm.jsmix
-rawp.perm.null <- rawp.perm[which(rslt_all$causalNode == 0)]
-rawp.perm.nonnull <- rawp.perm[which(rslt_all$causalNode == 1)]
-my.pvalue.list.con11.l <-list("PhyloMed.A.null"=na.omit(rawp.asym.null),
-                              #"PhyloMed.A.nonnull"=na.omit(rawp.asym.nonnull),
-                              "PhyloMed.P.null"=na.omit(rawp.perm.null))
-                              #"PhyloMed.P.nonnull"=na.omit(rawp.perm.nonnull))
-postscript("../Figs/qq_nullTaxaCausalType1.eps")  
-.qqunifPlot(my.pvalue.list.con11.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
-            par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
-                                                        col = c("red","green"))))
-dev.off()
+# ##### Archive: generate qqplot of null taxa when exists causal taxa (non-null taxa) ####
+# # continuous outcome, n = 200, causalType =1
+# load("../Simulation/ProposedModel_Main/continuous_JC/OUTPUT/shared/Type/allType1Nsample200A0.5B0.5.Rdata")
+# rawp.asym <- rslt_all$rawp.asym.jsmix
+# rawp.asym.null <- rawp.asym[which(rslt_all$causalNode == 0)]
+# rawp.asym.nonnull <- rawp.asym[which(rslt_all$causalNode == 1)]
+# rawp.perm <- rslt_all$rawp.perm.jsmix
+# rawp.perm.null <- rawp.perm[which(rslt_all$causalNode == 0)]
+# rawp.perm.nonnull <- rawp.perm[which(rslt_all$causalNode == 1)]
+# my.pvalue.list.con11.l <-list("PhyloMed.A.null"=na.omit(rawp.asym.null),
+#                               #"PhyloMed.A.nonnull"=na.omit(rawp.asym.nonnull),
+#                               "PhyloMed.P.null"=na.omit(rawp.perm.null))
+#                               #"PhyloMed.P.nonnull"=na.omit(rawp.perm.nonnull))
+# postscript("../Figs/qq_nullTaxaCausalType1.eps")  
+# .qqunifPlot(my.pvalue.list.con11.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
+#             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
+#                                                         col = c("red","green"))))
+# dev.off()
+# 
+# rawp.asym <- rslt_all$rawp.asym.jsmix
+# rawp.perm <- rslt_all$rawp.perm.jsmix
+# globalp.mat = matrix(NA, nrow = nrow(rslt_all$gp), 6)
+# for (i in 1:nrow(rslt_all$gp)) {
+#   rawp.asym.rm = na.omit(rawp.asym[i,which(rslt_all$causalNode[i,] == 0)])
+#   rawp.perm.rm = na.omit(rawp.perm[i,which(rslt_all$causalNode[i,] == 0)])
+#   L = length(rawp.asym.rm)
+#   globalp.mat[i,] = c(min(L * rawp.asym.rm/rank(rawp.asym.rm)), 
+#                       1 - pchisq(-2 * sum(log(rawp.asym.rm)), df = 2 * L), 
+#                       p.hmp(rawp.asym.rm, w = rep(1/L, L), L = L),
+#                       min(L * rawp.perm.rm/rank(rawp.perm.rm)), 
+#                       1 - pchisq(-2 * sum(log(rawp.perm.rm)), df = 2 * L), 
+#                       p.hmp(rawp.perm.rm, w = rep(1/L, L), L = L))
+# }
+# my.pvalue.list.con11.l <-list("PhyloMed.A"=globalp.mat[,3],
+#                               "PhyloMed.P"=globalp.mat[,6])
+# postscript("../Figs/qq_nullTaxaCausalType1_globalp.eps")  
+# .qqunifPlot(my.pvalue.list.con11.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
+#             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
+#                                                         col = c("pink","red"))))
+# dev.off()
+# 
+# # continuous outcome, n =200, causalType =2
+# load("../Simulation/ProposedModel_Main/continuous_JC/OUTPUT/shared/Type/allType2Nsample200A0.5B0.5.Rdata")
+# rawp.asym <- rslt_all$rawp.asym.jsmix
+# rawp.asym.null <- rawp.asym[which(rslt_all$causalNode == 0)]
+# rawp.asym.nonnull <- rawp.asym[which(rslt_all$causalNode == 1)]
+# rawp.perm <- rslt_all$rawp.perm.jsmix
+# rawp.perm.null <- rawp.perm[which(rslt_all$causalNode == 0)]
+# rawp.perm.nonnull <- rawp.perm[which(rslt_all$causalNode == 1)]
+# my.pvalue.list.con11.l <-list("PhyloMed.A.null"=na.omit(rawp.asym.null),
+#                               #"PhyloMed.A.nonnull"=na.omit(rawp.asym.nonnull),
+#                               "PhyloMed.P.null"=na.omit(rawp.perm.null))
+# #"PhyloMed.P.nonnull"=na.omit(rawp.perm.nonnull))
+# postscript("../Figs/qq_nullTaxaCausalType2.eps")  
+# .qqunifPlot(my.pvalue.list.con11.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
+#             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
+#                                                         col = c("red","green"))))
+# dev.off()
+# 
+# rawp.asym <- rslt_all$rawp.asym.jsmix
+# rawp.perm <- rslt_all$rawp.perm.jsmix
+# globalp.mat = matrix(NA, nrow = nrow(rslt_all$gp), 6)
+# for (i in 1:nrow(rslt_all$gp)) {
+#   rawp.asym.rm = na.omit(rawp.asym[i,which(rslt_all$causalNode[i,] == 0)])
+#   rawp.perm.rm = na.omit(rawp.perm[i,which(rslt_all$causalNode[i,] == 0)])
+#   L = length(rawp.asym.rm)
+#   globalp.mat[i,] = c(min(L * rawp.asym.rm/rank(rawp.asym.rm)), 
+#                       1 - pchisq(-2 * sum(log(rawp.asym.rm)), df = 2 * L), 
+#                       p.hmp(rawp.asym.rm, w = rep(1/L, L), L = L),
+#                       min(L * rawp.perm.rm/rank(rawp.perm.rm)), 
+#                       1 - pchisq(-2 * sum(log(rawp.perm.rm)), df = 2 * L), 
+#                       p.hmp(rawp.perm.rm, w = rep(1/L, L), L = L))
+# }
+# my.pvalue.list.con11.l <-list("PhyloMed.A"=globalp.mat[,3],
+#                               "PhyloMed.P"=globalp.mat[,6])
+# postscript("../Figs/qq_nullTaxaCausalType2_globalp.eps")  
+# .qqunifPlot(my.pvalue.list.con11.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
+#             par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
+#                                                         col = c("pink","red"))))
+# dev.off()
 
-rawp.asym <- rslt_all$rawp.asym.jsmix
-rawp.perm <- rslt_all$rawp.perm.jsmix
-globalp.mat = matrix(NA, nrow = nrow(rslt_all$gp), 6)
-for (i in 1:nrow(rslt_all$gp)) {
-  rawp.asym.rm = na.omit(rawp.asym[i,which(rslt_all$causalNode[i,] == 0)])
-  rawp.perm.rm = na.omit(rawp.perm[i,which(rslt_all$causalNode[i,] == 0)])
-  L = length(rawp.asym.rm)
-  globalp.mat[i,] = c(min(L * rawp.asym.rm/rank(rawp.asym.rm)), 
-                      1 - pchisq(-2 * sum(log(rawp.asym.rm)), df = 2 * L), 
-                      p.hmp(rawp.asym.rm, w = rep(1/L, L), L = L),
-                      min(L * rawp.perm.rm/rank(rawp.perm.rm)), 
-                      1 - pchisq(-2 * sum(log(rawp.perm.rm)), df = 2 * L), 
-                      p.hmp(rawp.perm.rm, w = rep(1/L, L), L = L))
-}
-my.pvalue.list.con11.l <-list("PhyloMed.A"=globalp.mat[,3],
-                              "PhyloMed.P"=globalp.mat[,6])
-postscript("../Figs/qq_nullTaxaCausalType1_globalp.eps")  
-.qqunifPlot(my.pvalue.list.con11.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
-            par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
-                                                        col = c("pink","red"))))
-dev.off()
-
-# continuous outcome, n =200, causalType =2
-load("../Simulation/ProposedModel_Main/continuous_JC/OUTPUT/shared/Type/allType2Nsample200A0.5B0.5.Rdata")
-rawp.asym <- rslt_all$rawp.asym.jsmix
-rawp.asym.null <- rawp.asym[which(rslt_all$causalNode == 0)]
-rawp.asym.nonnull <- rawp.asym[which(rslt_all$causalNode == 1)]
-rawp.perm <- rslt_all$rawp.perm.jsmix
-rawp.perm.null <- rawp.perm[which(rslt_all$causalNode == 0)]
-rawp.perm.nonnull <- rawp.perm[which(rslt_all$causalNode == 1)]
-my.pvalue.list.con11.l <-list("PhyloMed.A.null"=na.omit(rawp.asym.null),
-                              #"PhyloMed.A.nonnull"=na.omit(rawp.asym.nonnull),
-                              "PhyloMed.P.null"=na.omit(rawp.perm.null))
-#"PhyloMed.P.nonnull"=na.omit(rawp.perm.nonnull))
-postscript("../Figs/qq_nullTaxaCausalType2.eps")  
-.qqunifPlot(my.pvalue.list.con11.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
-            par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
-                                                        col = c("red","green"))))
-dev.off()
-
-rawp.asym <- rslt_all$rawp.asym.jsmix
-rawp.perm <- rslt_all$rawp.perm.jsmix
-globalp.mat = matrix(NA, nrow = nrow(rslt_all$gp), 6)
-for (i in 1:nrow(rslt_all$gp)) {
-  rawp.asym.rm = na.omit(rawp.asym[i,which(rslt_all$causalNode[i,] == 0)])
-  rawp.perm.rm = na.omit(rawp.perm[i,which(rslt_all$causalNode[i,] == 0)])
-  L = length(rawp.asym.rm)
-  globalp.mat[i,] = c(min(L * rawp.asym.rm/rank(rawp.asym.rm)), 
-                      1 - pchisq(-2 * sum(log(rawp.asym.rm)), df = 2 * L), 
-                      p.hmp(rawp.asym.rm, w = rep(1/L, L), L = L),
-                      min(L * rawp.perm.rm/rank(rawp.perm.rm)), 
-                      1 - pchisq(-2 * sum(log(rawp.perm.rm)), df = 2 * L), 
-                      p.hmp(rawp.perm.rm, w = rep(1/L, L), L = L))
-}
-my.pvalue.list.con11.l <-list("PhyloMed.A"=globalp.mat[,3],
-                              "PhyloMed.P"=globalp.mat[,6])
-postscript("../Figs/qq_nullTaxaCausalType2_globalp.eps")  
-.qqunifPlot(my.pvalue.list.con11.l, auto.key=list(corner=c(.95,.05),padding.text=4, cex=1.5), main = "",
-            par.settings = list(superpose.symbol = list(pch = 19, cex = 1.2,
-                                                        col = c("pink","red"))))
+##### RealData: Sensitivity Analysis ####
+load("../Data/Deriveddata/rslt.sens90.rda")
+pdf(file = "../Figs/S8.sens90.pdf", width = 16, height = 8)
+par(mfrow = c(1,2))
+plot(Cecal.Sens$NodeID75$sens.out, sens.par = "rho", main = "Mouse cecal study", ylim = c(-2, 2), cex.lab = 1.5, cex.main = 2)
+plot(Combo.Sens$NodeID297$sens.out, sens.par = "rho", main = "Human gut study", ylim = c(-2, 2), cex.lab = 1.5, cex.main = 2)
 dev.off()

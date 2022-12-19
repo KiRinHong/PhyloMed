@@ -71,20 +71,20 @@ generateSensSigNode <- function(data.lst, rslt.lst, treatment, covariate, outcom
     beta.est = summary(mod2)$coefficients["G",1]
     #cor.sig[id] = cor(alpha.resid, beta.resid)
     
-    med.res = mediate(mod1, mod2, treat = "Trt", mediator = "G", sims = 1000, robustSE = TRUE, conf.level = 0.95)
+    med.res = mediate(mod1, mod2, treat = "Trt", mediator = "G", sims = 1000, robustSE = TRUE, conf.level = 0.90)
     # med.res = mediate(mod1, mod2, treat = "Trt", mediator = "G", sims = 1000, boot = TRUE, conf.level = 0.95)
     #summary(med.res)
     ## sensitivity
     sens.out = medsens(med.res, rho.by = 0.01, effect.type = "indirect")
-    figure.out = paste0(signode.id[id],".pdf")
-    pdf(file = paste0("../Figs/", figure.out))
-    plot(sens.out, sens.par = "rho", main = "Sensitivity analysis", ylim = c(-2, 2)) 
-    ## check empirical rho 
-    # plot(alpha.resid, beta.resid, 
-    #      xlab = "Error term in mediator regression", 
-    #      ylab = "Error term in outcome regression",
-    #      main = "Correlation between two error terms")
-    dev.off()
+    # figure.out = paste0(signode.id[id],".pdf")
+    # pdf(file = paste0("../Figs/", figure.out))
+    # plot(sens.out, sens.par = "rho", main = "Sensitivity analysis", ylim = c(-2, 2)) 
+    # ## check empirical rho 
+    # # plot(alpha.resid, beta.resid, 
+    # #      xlab = "Error term in mediator regression", 
+    # #      ylab = "Error term in outcome regression",
+    # #      main = "Correlation between two error terms")
+    # dev.off()
     res[[id]] = list(alpha.resid = alpha.resid, beta.resid = beta.resid,
                      alpha.est = alpha.est, beta.est = beta.est,
                      cor.est = cor(alpha.resid, beta.resid), 
@@ -97,22 +97,18 @@ set.seed(123)
 load("../Data/Deriveddata/rslt.runModel.rda")
 load("../Data/Deriveddata/Cecal.filter20top100.rda")
 Cecal.Sens = generateSensSigNode(cecal.top, rslt.cecal.top100.psc05, treatment = "Treatment", covariate = NULL, outcome = "pFat")
+
 # Node75: Rho at which ACME = 0: 0.39,
-# 0.07 ~ 0.61 
+# CI 0.95: 0.07 ~ 0.61, CI 0.90: 0.13 ~ 0.57
 # -1.71e-17
+
 load("../Data/Deriveddata/COMBO.filter20.rda")
 Combo.Sens = generateSensSigNode(combo.filter, rslt.combo.filter20.psc05, treatment = "fat", covariate = "calor", outcome = "bmi")
 # Node 297: Rho at which ACME = 0: -0.44
-# -0.61 ~ -0.20
+# CI 0.95: -0.61 ~ -0.20, CI 0.90: -0.58 ~ -0.27
 # 5.32e-17
-save(Cecal.Sens, Combo.Sens,  file = "../Data/Deriveddata/rslt.sens.rda")
+save(Cecal.Sens, Combo.Sens,  file = "../Data/Deriveddata/rslt.sens90.rda")
 
-load("../Data/Deriveddata/rslt.sens.rda")
-pdf(file = "../Figs/sens.pdf", width = 16, height = 8)
-par(mfrow = c(1,2))
-plot(Cecal.Sens$NodeID75$sens.out, sens.par = "rho", main = "Mouse cecal study", ylim = c(-2, 2), cex.lab=1.5, cex.main = 2)
-plot(Combo.Sens$NodeID297$sens.out, sens.par = "rho", main = "Human gut study", ylim = c(-2, 2), cex.lab=1.5, cex.main = 2)
-dev.off()
 ## check empirical rho 
 # plot(alpha.resid, beta.resid, 
 #      xlab = "Error term in mediator regression", 

@@ -230,7 +230,7 @@ rslt.cecal.top100.psc01$gp[13] = rslt.ldm$med.p.global.omni
 rslt.cecal.top100.psc05$gp[13] = rslt.ldm$med.p.global.omni
 rslt.cecal.top100.psc10$gp[13] = rslt.ldm$med.p.global.omni
 
-# no mediator selectd
+# no mediator selected
 M2 = M + 0.1
 M2.p = M2/rowSums(M2)
 rslt.hima.psc01 = microHIMA(Trt, Y, M2.p, NULL, 0.1)
